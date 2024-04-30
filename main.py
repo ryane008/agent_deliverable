@@ -18,6 +18,9 @@ def visualize_results(agent_tracking: list, ids: list = None):
             
             for index, val in enumerate(agent_tracking):
                 agents.append(index)
+                print(val)
+                print(index)
+                print("-------------")
                 energies.append(val[index][i][0])
                 
             fig = plt.figure(figsize = (10, 5))
@@ -31,9 +34,9 @@ def visualize_results(agent_tracking: list, ids: list = None):
         for id in ids:
             rounds = []
             energies = []
-            for key, val in agent_tracking[id].items():
+            for key, val in agent_tracking[id][id].items():
                 rounds.append[key]
-                energies.append[val]
+                energies.append[val[0]]
             round_count = len(rounds) - 1
             plt.plot(rounds, energies, marker='o', linestyle='-')
             plt.xlabel('Interaction Round')
