@@ -3,13 +3,34 @@ from agent import Agent
 from parallel_utils import Parallel_Utils
 import matplotlib.pyplot as plt
 
+'''
+creating agent objects
+params: i- the given unique id of the agent (goes from 0 to the specified count)
+'''
 def create_agents(i):
     new_agent = Agent(i)
     return new_agent
 
+'''
+Used to initialize the hashmap data structure storing all the agent states
+
+params: agent: The specific agent used to initialize this hashmap entry. This
+map will then be appended to the main data structure through the multiprocessing
+pool in the main method, and this information will be updated every round
+'''
 def initialize_stats(agent: Agent):
     return {agent.id: {0: (agent.energy,-1)}}
 
+'''
+used to visualize each of the individual rounds. If there are no ids,
+it will show a bar chart of all the agents energies through the five
+rounds in the base case. If provided ids, it will show the energy of 
+the agents then
+
+params:
+agent_tracking: Data structure containing all agent info
+ids: optional argument for agents you want to display
+'''
 def visualize_results(agent_tracking: list, ids: list = None):
     if ids is None:
         for i in range(len(agent_tracking[0][0])):
@@ -43,7 +64,13 @@ def visualize_results(agent_tracking: list, ids: list = None):
             plt.ylabel('Energy Values')
             plt.title(f'Energy of agent {id} after {round_count} rounds')
             plt.show()
-    
+
+'''
+for printing agent results
+params: 
+ids: ids of agent information to print
+agent_tracking: data structure of agent information
+'''
 def print_result(ids: list[int], agent_tracking:list):
     for id in ids:
         print(f"Stats for Agent {id}")
@@ -55,6 +82,16 @@ def print_result(ids: list[int], agent_tracking:list):
             print("Agent Counterpart id: ", val[1])
         print("--------------------------")
 
+'''
+interaction round called by the main method x numer of times. 
+Randomizes interactions for each agent within the agent list, and updates their
+tracking every round.
+
+Params: 
+agents: list of agent objects
+round: the round of interactions
+agent_tracking: Data structure used to track each agent's information
+'''
 def interaction_round(agents: list[Agent], round: int, agent_tracking: list):
     for agent in agents:
         other_agent_index = random.randint(0, 99)
@@ -66,8 +103,16 @@ def interaction_round(agents: list[Agent], round: int, agent_tracking: list):
             energy_transfer(other_agent, agent)
             agent_tracking[agent.id][agent.id][round] = (agent.energy, other_agent.id)
         
-            
-#agent_one will always be higher based on interaction round
+     
+'''
+Energy transfer helper functon between two agents. Currently there is a 
+75% chance the higher energy agent receives the energy
+NB: agent_one will always be higher based on interaction round
+
+Args: 
+agent_one: The first agent randomly selected in the interaction
+agent_two: The second agent randomly selected in the interaction
+'''
 def energy_transfer(agent_one: Agent, agent_two: Agent):
     prob = random.randint(0, 3)
     
@@ -101,6 +146,11 @@ def energy_transfer(agent_one: Agent, agent_two: Agent):
                 agent_one.setEnergy(val, True)
                 agent_two.setEnergy(val, False)
 
+'''
+main class for running commands
+
+below: initialize 100 agents, five rounds of interactions
+'''
 def main():
     #list of agents
     agents = []

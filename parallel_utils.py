@@ -1,7 +1,9 @@
 import multiprocessing as mp
 import os
 
-
+'''
+Helper class for multithreading
+'''
 class Parallel_Utils():
     @staticmethod
     def run_process(func, args_list: list):
